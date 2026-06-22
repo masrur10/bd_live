@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>১০টি লিংকের m3u8 প্লেয়ার (ফুলস্ক্রিন সহ)</title>
+    
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+    
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: #1e1e1e;
+            margin: 0;
+            padding: 20px;
+            font-family: Arial, sans-serif;
+            color: white;
+        }
+
+        .video-container {
+            position: relative;
+            width: 720px;
+            max-width: 100%;
+            background: #000;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.6);
+            margin-bottom: 20px;
+        }
+
+        /* ফুলস্ক্রিন অবস্থায় ভিডিও কন্টেইনারের স্টাইল */
+        .video-container:fullscreen {
+            width: 100vw;
+            height: 100vh;
+            border-radius: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #000;
+        }
+
+        video {
+            width: 100%;
+            display: block;
+        }
+
+        .video-container:fullscreen video {
+            height: 100%;
+            object-fit: contain;
+        }
+
+        .controls {
+            display: flex;
+            align-items: center;
+            background: rgba(0, 0, 0, 0.8);
+            padding: 12px;
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        button.control-btn {
+            background: #e50914; 
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            cursor: pointer;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+
+        button.control-btn:hover { background: #b20710; }
+
+        input[type="range"] {
+            flex: 1;
+            margin: 0 15px;
+            cursor: pointer;
+            accent-color: #e50914; 
+        }
+
+        #volumeBar { flex: 0.2; margin-right: 15px; }
+
+        #fullscreenBtn {
+            background: #333;
+        }
+        #fullscreenBtn:hover {
+            background: #555;
+        }
+
+        /* প্লেলিস্ট স্টাইল */
+        .playlist {
+            width: 720px;
+            max-width: 100%;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+            gap: 10px;
+        }
+
+        button.playlist-btn {
+            background: #333;
+            color: white;
+            border: 2px solid transparent;
+            padding: 12px;
+            cursor: pointer;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: 0.3s;
+        }
+
+        button.playlist-btn:hover {
+            background: #444;
+            border-color: #e50914;
+        }
+
+        button.playlist-btn.active {
+            background: #e50914;
+            border-color: white;
+            font-weight: bold;
+        }
+        
+        h3 { margin: 0 0 15px 0; width: 720px; max-width: 100%; text-align: left; }
+    </style>
+</head>
+<body>
+
+    <div class="video-container" id="videoContainer">
+        <video id="videoPlayer"></video>
+        <div class="controls">
+            <button id="playPauseBtn" class="control-btn">Play</button>
+            <input type="range" id="progressBar" value="0" max="100">
+            <input type="range" id="volumeBar" value="1" max="1" step="0.1" title="Volume">
+            <button id="fullscreenBtn" class="control-btn">Full</button>
+        </div>
+    </div>
+
+    <h3>ভিডিও তালিকা (প্লেলিস্ট):</h3>
+    <div class="playlist" id="playlistContainer">
+        </div>
+
+    <script>
+        const video = document.getElementById('videoPlayer');
+        const videoContainer = document.getElementById('videoContainer');
+        const playPauseBtn = document.getElementById('playPauseBtn');
+        const fullscreenBtn = document.getElementById('fullscreenBtn');
+        const playlistContainer = document.getElementById('playlistContainer');
+        let hls; 
+
+        // =======================================================
+        // 👇 এখানে আপনার ১০টি লিংকের নাম এবং URL বসাবেন 👇
+        // =======================================================
+        const playlist = [
+            { name: "চ্যানেল ১", url: "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8" }, 
+            { name: "চ্যানেল ২", url: "https://tvex.easypecker.com/TSportsHD_sf_bdix/index.m3u8" },
+            { name: "চ্যানেল ৩", url: "http://103.209.196.22:84/feed1001/index.fmp4.m3u8" },
+            { name: "চ্যানেল ৪", url: "https://tvex.easypecker.com/TSportsHD_sf_bdix/index.m3u8" },
+            { name: "চ্যানেল ৫", url: "https://tvex.easypecker.com/spotyfyz_nix/index.m3u8" },
+            { name: "চ্যানেল ৬", url: "আপনার_m3u8_লিংক_৬" },
+            { name: "চ্যানেল ৭", url: "আপনার_m3u8_লিংক_৭" },
+            { name: "চ্যানেল ৮", url: "আপনার_m3u8_লিংক_৮" },
+            { name: "চ্যানেল ৯", url: "আপনার_m3u8_লিংক_৯" },
+            { name: "চ্যানেল ১০", url: "আপনার_m3u8_লিংক_১০" }
+        ];
+
+        // ভিডিও লোড করার ফাংশন
+        function loadVideo(url, buttonElement) {
+            if (hls) {
+                hls.destroy();
+            }
+
+            if (Hls.isSupported()) {
+                hls = new Hls();
+                hls.loadSource(url);
+                hls.attachMedia(video);
+                hls.on(Hls.Events.MANIFEST_PARSED, function () {
+                    video.play();
+                    playPauseBtn.textContent = 'Pause';
+                });
+            } 
+            else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+                video.src = url;
+                video.addEventListener('loadedmetadata', function () {
+                    video.play();
+                    playPauseBtn.textContent = 'Pause';
+                });
+            }
+
+            document.querySelectorAll('.playlist-btn').forEach(btn => btn.classList.remove('active'));
+            if(buttonElement) {
+                buttonElement.classList.add('active');
+            }
+        }
+
+        // প্লেলিস্ট থেকে বাটন তৈরি করা
+        playlist.forEach((item) => {
+            const btn = document.createElement('button');
+            btn.className = 'playlist-btn';
+            btn.textContent = item.name;
+            btn.addEventListener('click', () => loadVideo(item.url, btn));
+            playlistContainer.appendChild(btn);
+        });
+
+        // =====================================
+        // প্লেয়ার কন্ট্রোলস লজিক
+        // =====================================
+        
+        // Play/Pause
+        playPauseBtn.addEventListener('click', () => {
+            if (video.paused) {
+                video.play();
+                playPauseBtn.textContent = 'Pause';
+            } else {
+                video.pause();
+                playPauseBtn.textContent = 'Play';
+            }
+        });
+
+        // Progress Bar
+        video.addEventListener('timeupdate', () => {
+            if (!isNaN(video.duration)) {
+                const progress = (video.currentTime / video.duration) * 100;
+                document.getElementById('progressBar').value = progress;
+            }
+        });
+
+        document.getElementById('progressBar').addEventListener('input', (e) => {
+            video.currentTime = (e.target.value / 100) * video.duration;
+        });
+
+        // Volume
+        document.getElementById('volumeBar').addEventListener('input', (e) => {
+            video.volume = e.target.value;
+        });
+
+        video.addEventListener('ended', () => {
+            playPauseBtn.textContent = 'Play';
+            document.getElementById('progressBar').value = 0;
+        });
+
+        // =====================================
+        // ফুলস্ক্রিন লজিক
+        // =====================================
+        fullscreenBtn.addEventListener('click', () => {
+            if (!document.fullscreenElement) {
+                // ফুলস্ক্রিন চালু করা
+                if (videoContainer.requestFullscreen) {
+                    videoContainer.requestFullscreen();
+                } else if (videoContainer.webkitRequestFullscreen) { /* Safari */
+                    videoContainer.webkitRequestFullscreen();
+                } else if (videoContainer.msRequestFullscreen) { /* IE11 */
+                    videoContainer.msRequestFullscreen();
+                }
+            } else {
+                // ফুলস্ক্রিন বন্ধ করা
+                if (document.exitFullscreen) {
+                    document.exitFullscreen();
+                } else if (document.webkitExitFullscreen) { /* Safari */
+                    document.webkitExitFullscreen();
+                } else if (document.msExitFullscreen) { /* IE11 */
+                    document.msExitFullscreen();
+                }
+            }
+        });
+
+        // Esc বাটন চেপে ফুলস্ক্রিন থেকে বের হলে বাটনের টেক্সট ঠিক করা
+        document.addEventListener('fullscreenchange', () => {
+            if (document.fullscreenElement) {
+                fullscreenBtn.textContent = 'Exit';
+            } else {
+                fullscreenBtn.textContent = 'Full';
+            }
+        });
+
+    </script>
+</body>
+</html>
