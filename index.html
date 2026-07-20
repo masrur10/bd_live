@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>১০টি লিংকের m3u8 প্লেয়ার (লোগো সহ)</title>
+    <title>১০টি লিংকের m3u8 প্লেয়ার (অটো-রোটেশন সহ)</title>
     
     <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
     
@@ -97,19 +97,19 @@
             max-width: 100%;
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-            gap: 15px; /* গ্যাপ একটু বাড়ানো হয়েছে */
+            gap: 15px;
         }
 
         button.playlist-btn {
             background: #333;
             color: white;
             border: 2px solid transparent;
-            padding: 10px; /* প্যাডিং কমানো হয়েছে যাতে লোগো ভালো ধরে */
+            padding: 10px;
             cursor: pointer;
             border-radius: 8px;
             transition: 0.3s;
             display: flex;
-            flex-direction: column; /* লোগো উপরে, নাম নিচে */
+            flex-direction: column;
             align-items: center;
             gap: 8px;
         }
@@ -125,13 +125,12 @@
             font-weight: bold;
         }
 
-        /* লোগোর স্টাইল */
         .channel-logo {
             width: 50px;
             height: 50px;
-            object-fit: contain; /* লোগোর রেশিও ঠিক রাখবে */
+            object-fit: contain;
             border-radius: 5px;
-            background-color: rgba(255, 255, 255, 0.1); /* লোগোর পেছনে হালকা ব্যাকগ্রাউন্ড */
+            background-color: rgba(255, 255, 255, 0.1);
             padding: 2px;
         }
 
@@ -167,26 +166,19 @@
         let hls; 
         let currentIndex = 0;
 
-        // =======================================================
-        // 👇 এখানে আপনার লিংকের নাম, লোগো এবং URL বসাবেন 👇
-        // =======================================================
         const playlist = [
-            // আমি এখানে নমুনা হিসেবে 'via.placeholder.com' এর ৫টি লিংক ব্যবহার করেছি।
-            // আপনি এই লিংকগুলো পরিবর্তন করে আপনার লোগোর লিংক (যেমন: PNG, JPG বা SVG লিংক) বসাবেন।
-            { name: "চ্যানেল ১", logo: "https://ibb.co/cXvgFrN0", url: "https://channel01-onlymex.akamaized.net/hls/live/2022749/event01/index_6.m3u8" }, 
+            { name: "চ্যানেল ১", logo: "https://i.ibb.co/DRkS2c3/T-Sports.png", url: "https://channel01-onlymex.akamaized.net/hls/live/2022749/event01/index_6.m3u8" }, 
             { name: "চ্যানেল ২", logo: "https://i.ibb.co/DRkS2c3/T-Sports.png", url: "https://tvex.easypecker.com/TSportsHD_sf_bdix/index.m3u8" },
             { name: "চ্যানেল ৩", logo: "https://i.ibb.co/DRkS2c3/T-Sports.png", url: "https://channel01-onlymex.akamaized.net/hls/live/2022749/event01/index_6.m3u8" },
             { name: "চ্যানেল ৪", logo: "https://i.ibb.co/DRkS2c3/T-Sports.png", url: "https://tvex.easypecker.com/TSportsHD_sf_bdix/index.m3u8" },
-            { name: "চ্যানেল ৫", logo: "https://i.ibb.co/DRkS2c3/T-Sports.png", url: "https://cdn-tt.pages.dev/ch1.m3u8" },
-            // বাকিগুলো খালি রাখা হলো, আপনি আপনার তথ্য বসাবেন
-            { name: "চ্যানেল ৬", logo: "https://i.ibb.co/DRkS2c3/T-Sports.png", url: "https://tvex.easypecker.com/TSportsHD_sf_bdix/index.m3u8" },
-            { name: "চ্যানেল ৭", logo: "https://i.ibb.co/DRkS2c3/T-Sports.png", url: "https://cdn-tt.pages.dev/ch1.m3u8" },
-            { name: "চ্যানেল ৮", logo: "https://i.ibb.co/DRkS2c3/T-Sports.png", url: "https://tvex.easypecker.com/TSportsHD_sf_bdix/index.m3u8" },
-            { name: "চ্যানেল ৯", logo: "https://i.ibb.co/DRkS2c3/T-Sports.png", url: "https://tvex.easypecker.com/TSportsHD_sf_bdix/index.m3u8" },
-            { name: "চ্যানেল ১০", logo: "https://i.ibb.co/DRkS2c3/T-Sports.png", url: "https://tvex.easypecker.com/TSportsHD_sf_bdix/index.m3u8" }
+            { name: "চ্যানেল ৫", logo: "https://via.placeholder.com/100x100.png?text=CH5", url: "https://cdn-tt.pages.dev/ch1.m3u8" },
+            { name: "চ্যানেল ৬", logo: "https://via.placeholder.com/100x100.png?text=CH6", url: "https://tvex.easypecker.com/TSportsHD_sf_bdix/index.m3u8" },
+            { name: "চ্যানেল ৭", logo: "https://via.placeholder.com/100x100.png?text=CH7", url: "https://cdn-tt.pages.dev/ch1.m3u8" },
+            { name: "চ্যানেল ৮", logo: "https://via.placeholder.com/100x100.png?text=CH8", url: "আপনার_m3u8_লিংক_৮" },
+            { name: "চ্যানেল ৯", logo: "https://via.placeholder.com/100x100.png?text=CH9", url: "আপনার_m3u8_লিংক_৯" },
+            { name: "চ্যানেল ১০", logo: "https://via.placeholder.com/100x100.png?text=CH10", url: "আপনার_m3u8_লিংক_১০" }
         ];
 
-        // ভিডিও লোড করার মূল ফাংশন
         function loadVideo(index) {
             if (index < 0 || index >= playlist.length) return; 
             
@@ -214,7 +206,6 @@
                 });
             }
 
-            // প্লেলিস্টের বাটনে অ্যাক্টিভ কালার সেট করা
             document.querySelectorAll('.playlist-btn').forEach((btn, idx) => {
                 if (idx === currentIndex) {
                     btn.classList.add('active');
@@ -224,27 +215,22 @@
             });
         }
 
-        // প্লেলিস্ট থেকে বাটন তৈরি করা (লোগো সহ)
         playlist.forEach((item, index) => {
             const btn = document.createElement('button');
             btn.className = 'playlist-btn';
             
-            // লোগো এলিমেন্ট তৈরি
             const img = document.createElement('img');
             img.src = item.logo;
             img.alt = item.name;
             img.className = 'channel-logo';
-            // লোগো লোড না হলে একটি ডিফল্ট টেক্সট দেখানোর জন্য
             img.onerror = function() {
                 this.src = "https://via.placeholder.com/50x50.png?text=No+Logo";
             };
 
-            // নাম এলিমেন্ট তৈরি
             const span = document.createElement('span');
             span.textContent = item.name;
             span.className = 'channel-name';
 
-            // বাটনের ভেতর লোগো এবং নাম যোগ করা
             btn.appendChild(img);
             btn.appendChild(span);
             
@@ -252,13 +238,8 @@
             playlistContainer.appendChild(btn);
         });
 
-        // প্রথম ভিডিওটি অটোমেটিক লোড করার জন্য
         loadVideo(0);
 
-        // =====================================
-        // প্লেয়ার কন্ট্রোলস লজিক
-        // =====================================
-        
         // Play/Pause
         playPauseBtn.addEventListener('click', () => {
             if (video.paused) {
@@ -288,7 +269,7 @@
             loadVideo(prevIndex);
         });
 
-        // ভিডিও শেষ হলে স্বয়ংক্রিয়ভাবে পরের ভিডিও चालू হবে
+        // ভিডিও শেষ হলে স্বয়ংক্রিয়ভাবে পরের ভিডিও चालू হবে
         video.addEventListener('ended', () => {
             let nextIndex = currentIndex + 1;
             if (nextIndex < playlist.length) {
@@ -317,33 +298,59 @@
         });
 
         // =====================================
-        // ফুলস্ক্রিন লজিক
+        // রোটেশন সহ ফুলস্ক্রিন লজিক
         // =====================================
-        fullscreenBtn.addEventListener('click', () => {
-            if (!document.fullscreenElement) {
-                if (videoContainer.requestFullscreen) {
-                    videoContainer.requestFullscreen();
-                } else if (videoContainer.webkitRequestFullscreen) {
-                    videoContainer.webkitRequestFullscreen();
-                } else if (videoContainer.msRequestFullscreen) {
-                    videoContainer.msRequestFullscreen();
+        fullscreenBtn.addEventListener('click', async () => {
+            try {
+                if (!document.fullscreenElement) {
+                    // ফুলস্ক্রিন চালু করা
+                    if (videoContainer.requestFullscreen) {
+                        await videoContainer.requestFullscreen();
+                    } else if (videoContainer.webkitRequestFullscreen) {
+                        await videoContainer.webkitRequestFullscreen();
+                    }
+
+                    // ফুলস্ক্রিন হওয়ার পর স্ক্রিন অটো-রোটেট (Landscape) করা
+                    if (screen.orientation && screen.orientation.lock) {
+                        await screen.orientation.lock('landscape').catch(err => {
+                            console.log("রোটেশন লক সাপোর্ট করছে না বা ফোনে অটো-রোটেট অফ আছে:", err);
+                        });
+                    }
+                } else {
+                    // ফুলস্ক্রিন বন্ধ করা
+                    if (document.exitFullscreen) {
+                        await document.exitFullscreen();
+                    } else if (document.webkitExitFullscreen) {
+                        await document.webkitExitFullscreen();
+                    }
                 }
-            } else {
-                if (document.exitFullscreen) {
-                    document.exitFullscreen();
-                } else if (document.webkitExitFullscreen) {
-                    document.webkitExitFullscreen();
-                } else if (document.msExitFullscreen) {
-                    document.msExitFullscreen();
-                }
+            } catch (error) {
+                console.error("ফুলস্ক্রিন বা রোটেশনে সমস্যা:", error);
             }
         });
 
+        // ফুলস্ক্রিন পরিবর্তন ট্র্যাক করা
         document.addEventListener('fullscreenchange', () => {
             if (document.fullscreenElement) {
                 fullscreenBtn.textContent = 'Exit';
             } else {
                 fullscreenBtn.textContent = 'Full';
+                // ফুলস্ক্রিন থেকে বের হয়ে গেলে রোটেশন লক খুলে দেওয়া
+                if (screen.orientation && screen.orientation.unlock) {
+                    screen.orientation.unlock();
+                }
+            }
+        });
+        
+        // Safari (iOS) এর জন্য আলাদা ফুলস্ক্রিন পরিবর্তন ট্র্যাকিং
+        document.addEventListener('webkitfullscreenchange', () => {
+            if (document.webkitFullscreenElement) {
+                fullscreenBtn.textContent = 'Exit';
+            } else {
+                fullscreenBtn.textContent = 'Full';
+                if (screen.orientation && screen.orientation.unlock) {
+                    screen.orientation.unlock();
+                }
             }
         });
     </script>
