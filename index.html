@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>১০টি লিংকের m3u8 প্লেয়ার (ফুলস্ক্রিন সহ)</title>
+    <title>১০টি লিংকের m3u8 প্লেয়ার (লোগো সহ)</title>
     
     <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
     
@@ -30,7 +30,6 @@
             margin-bottom: 20px;
         }
 
-        /* ফুলস্ক্রিন অবস্থায় ভিডিও কন্টেইনারের স্টাইল */
         .video-container:fullscreen {
             width: 100vw;
             height: 100vh;
@@ -60,33 +59,35 @@
             bottom: 0;
             width: 100%;
             box-sizing: border-box;
+            gap: 8px;
         }
 
         button.control-btn {
             background: #e50914; 
             color: white;
             border: none;
-            padding: 8px 16px;
+            padding: 8px 12px;
             cursor: pointer;
             border-radius: 5px;
             font-weight: bold;
+            font-size: 14px;
         }
 
         button.control-btn:hover { background: #b20710; }
 
         input[type="range"] {
             flex: 1;
-            margin: 0 15px;
+            margin: 0 5px;
             cursor: pointer;
             accent-color: #e50914; 
         }
 
-        #volumeBar { flex: 0.2; margin-right: 15px; }
+        #volumeBar { flex: 0.2; }
 
-        #fullscreenBtn {
+        #fullscreenBtn, #prevBtn, #nextBtn {
             background: #333;
         }
-        #fullscreenBtn:hover {
+        #fullscreenBtn:hover, #prevBtn:hover, #nextBtn:hover {
             background: #555;
         }
 
@@ -95,19 +96,22 @@
             width: 720px;
             max-width: 100%;
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
-            gap: 10px;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 15px; /* গ্যাপ একটু বাড়ানো হয়েছে */
         }
 
         button.playlist-btn {
             background: #333;
             color: white;
             border: 2px solid transparent;
-            padding: 12px;
+            padding: 10px; /* প্যাডিং কমানো হয়েছে যাতে লোগো ভালো ধরে */
             cursor: pointer;
             border-radius: 8px;
-            font-size: 14px;
             transition: 0.3s;
+            display: flex;
+            flex-direction: column; /* লোগো উপরে, নাম নিচে */
+            align-items: center;
+            gap: 8px;
         }
 
         button.playlist-btn:hover {
@@ -120,7 +124,17 @@
             border-color: white;
             font-weight: bold;
         }
-        
+
+        /* লোগোর স্টাইল */
+        .channel-logo {
+            width: 50px;
+            height: 50px;
+            object-fit: contain; /* লোগোর রেশিও ঠিক রাখবে */
+            border-radius: 5px;
+            background-color: rgba(255, 255, 255, 0.1); /* লোগোর পেছনে হালকা ব্যাকগ্রাউন্ড */
+            padding: 2px;
+        }
+
         h3 { margin: 0 0 15px 0; width: 720px; max-width: 100%; text-align: left; }
     </style>
 </head>
@@ -130,6 +144,8 @@
         <video id="videoPlayer"></video>
         <div class="controls">
             <button id="playPauseBtn" class="control-btn">Play</button>
+            <button id="prevBtn" class="control-btn" title="পূর্ববর্তী">◀ Prev</button>
+            <button id="nextBtn" class="control-btn" title="পরবর্তী">Next ▶</button>
             <input type="range" id="progressBar" value="0" max="100">
             <input type="range" id="volumeBar" value="1" max="1" step="0.1" title="Volume">
             <button id="fullscreenBtn" class="control-btn">Full</button>
@@ -137,42 +153,53 @@
     </div>
 
     <h3>ভিডিও তালিকা (প্লেলিস্ট):</h3>
-    <div class="playlist" id="playlistContainer">
-        </div>
+    <div class="playlist" id="playlistContainer"></div>
 
     <script>
         const video = document.getElementById('videoPlayer');
         const videoContainer = document.getElementById('videoContainer');
         const playPauseBtn = document.getElementById('playPauseBtn');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
         const fullscreenBtn = document.getElementById('fullscreenBtn');
         const playlistContainer = document.getElementById('playlistContainer');
+        
         let hls; 
+        let currentIndex = 0;
 
         // =======================================================
-        // 👇 এখানে আপনার ১০টি লিংকের নাম এবং URL বসাবেন 👇
+        // 👇 এখানে আপনার লিংকের নাম, লোগো এবং URL বসাবেন 👇
         // =======================================================
         const playlist = [
-            { name: "চ্যানেল ১", url: "https://tvex.easypecker.com/TSportsHD_sf_bdix/index.m3u8" }, 
-            { name: "চ্যানেল ২", url: "https://tvex.easypecker.com/TSportsHD_sf_bdix/index.m3u8" },
-            { name: "চ্যানেল ৩", url: "https://channel01-onlymex.akamaized.net/hls/live/2022749/event01/index_6.m3u8" },
-            { name: "চ্যানেল ৪", url: "https://tvex.easypecker.com/TSportsHD_sf_bdix/index.m3u8" },
-            { name: "চ্যানেল ৫", url: "https://cdn-tt.pages.dev/ch1.m3u8" },
-            { name: "চ্যানেল ৬", url: "https://tvex.easypecker.com/TSportsHD_sf_bdix/index.m3u8" },
-            { name: "চ্যানেল ৭", url: "https://cdn-tt.pages.dev/ch1.m3u8" },
-            { name: "চ্যানেল ৮", url: "আপনার_m3u8_লিংক_৮" },
-            { name: "চ্যানেল ৯", url: "আপনার_m3u8_লিংক_৯" },
-            { name: "চ্যানেল ১০", url: "আপনার_m3u8_লিংক_১০" }
+            // আমি এখানে নমুনা হিসেবে 'via.placeholder.com' এর ৫টি লিংক ব্যবহার করেছি।
+            // আপনি এই লিংকগুলো পরিবর্তন করে আপনার লোগোর লিংক (যেমন: PNG, JPG বা SVG লিংক) বসাবেন।
+            { name: "চ্যানেল ১", logo: "https://i.ibb.co/DRkS2c3/T-Sports.png", url: "https://channel01-onlymex.akamaized.net/hls/live/2022749/event01/index_6.m3u8" }, 
+            { name: "চ্যানেল ২", logo: "https://i.ibb.co/DRkS2c3/T-Sports.png", url: "https://tvex.easypecker.com/TSportsHD_sf_bdix/index.m3u8" },
+            { name: "চ্যানেল ৩", logo: "https://i.ibb.co/DRkS2c3/T-Sports.png", url: "https://channel01-onlymex.akamaized.net/hls/live/2022749/event01/index_6.m3u8" },
+            { name: "চ্যানেল ৪", logo: "https://i.ibb.co/DRkS2c3/T-Sports.png", url: "https://tvex.easypecker.com/TSportsHD_sf_bdix/index.m3u8" },
+            { name: "চ্যানেল ৫", logo: "https://via.placeholder.com/100x100.png?text=CH5", url: "https://cdn-tt.pages.dev/ch1.m3u8" },
+            // বাকিগুলো খালি রাখা হলো, আপনি আপনার তথ্য বসাবেন
+            { name: "চ্যানেল ৬", logo: "https://via.placeholder.com/100x100.png?text=CH6", url: "https://tvex.easypecker.com/TSportsHD_sf_bdix/index.m3u8" },
+            { name: "চ্যানেল ৭", logo: "https://via.placeholder.com/100x100.png?text=CH7", url: "https://cdn-tt.pages.dev/ch1.m3u8" },
+            { name: "চ্যানেল ৮", logo: "https://via.placeholder.com/100x100.png?text=CH8", url: "আপনার_m3u8_লিংক_৮" },
+            { name: "চ্যানেল ৯", logo: "https://via.placeholder.com/100x100.png?text=CH9", url: "আপনার_m3u8_লিংক_৯" },
+            { name: "চ্যানেল ১০", logo: "https://via.placeholder.com/100x100.png?text=CH10", url: "আপনার_m3u8_লিংক_১০" }
         ];
 
-        // ভিডিও লোড করার ফাংশন
-        function loadVideo(url, buttonElement) {
+        // ভিডিও লোড করার মূল ফাংশন
+        function loadVideo(index) {
+            if (index < 0 || index >= playlist.length) return; 
+            
+            currentIndex = index;
+            const currentItem = playlist[currentIndex];
+
             if (hls) {
                 hls.destroy();
             }
 
             if (Hls.isSupported()) {
                 hls = new Hls();
-                hls.loadSource(url);
+                hls.loadSource(currentItem.url);
                 hls.attachMedia(video);
                 hls.on(Hls.Events.MANIFEST_PARSED, function () {
                     video.play();
@@ -180,27 +207,53 @@
                 });
             } 
             else if (video.canPlayType('application/vnd.apple.mpegurl')) {
-                video.src = url;
+                video.src = currentItem.url;
                 video.addEventListener('loadedmetadata', function () {
                     video.play();
                     playPauseBtn.textContent = 'Pause';
                 });
             }
 
-            document.querySelectorAll('.playlist-btn').forEach(btn => btn.classList.remove('active'));
-            if(buttonElement) {
-                buttonElement.classList.add('active');
-            }
+            // প্লেলিস্টের বাটনে অ্যাক্টিভ কালার সেট করা
+            document.querySelectorAll('.playlist-btn').forEach((btn, idx) => {
+                if (idx === currentIndex) {
+                    btn.classList.add('active');
+                } else {
+                    btn.classList.remove('active');
+                }
+            });
         }
 
-        // প্লেলিস্ট থেকে বাটন তৈরি করা
-        playlist.forEach((item) => {
+        // প্লেলিস্ট থেকে বাটন তৈরি করা (লোগো সহ)
+        playlist.forEach((item, index) => {
             const btn = document.createElement('button');
             btn.className = 'playlist-btn';
-            btn.textContent = item.name;
-            btn.addEventListener('click', () => loadVideo(item.url, btn));
+            
+            // লোগো এলিমেন্ট তৈরি
+            const img = document.createElement('img');
+            img.src = item.logo;
+            img.alt = item.name;
+            img.className = 'channel-logo';
+            // লোগো লোড না হলে একটি ডিফল্ট টেক্সট দেখানোর জন্য
+            img.onerror = function() {
+                this.src = "https://via.placeholder.com/50x50.png?text=No+Logo";
+            };
+
+            // নাম এলিমেন্ট তৈরি
+            const span = document.createElement('span');
+            span.textContent = item.name;
+            span.className = 'channel-name';
+
+            // বাটনের ভেতর লোগো এবং নাম যোগ করা
+            btn.appendChild(img);
+            btn.appendChild(span);
+            
+            btn.addEventListener('click', () => loadVideo(index));
             playlistContainer.appendChild(btn);
         });
+
+        // প্রথম ভিডিওটি অটোমেটিক লোড করার জন্য
+        loadVideo(0);
 
         // =====================================
         // প্লেয়ার কন্ট্রোলস লজিক
@@ -214,6 +267,35 @@
             } else {
                 video.pause();
                 playPauseBtn.textContent = 'Play';
+            }
+        });
+
+        // Next বাটন লজিক
+        nextBtn.addEventListener('click', () => {
+            let nextIndex = currentIndex + 1;
+            if (nextIndex >= playlist.length) {
+                nextIndex = 0;
+            }
+            loadVideo(nextIndex);
+        });
+
+        // Prev বাটন লজিক
+        prevBtn.addEventListener('click', () => {
+            let prevIndex = currentIndex - 1;
+            if (prevIndex < 0) {
+                prevIndex = playlist.length - 1;
+            }
+            loadVideo(prevIndex);
+        });
+
+        // ভিডিও শেষ হলে স্বয়ংক্রিয়ভাবে পরের ভিডিও चालू হবে
+        video.addEventListener('ended', () => {
+            let nextIndex = currentIndex + 1;
+            if (nextIndex < playlist.length) {
+                loadVideo(nextIndex);
+            } else {
+                playPauseBtn.textContent = 'Play';
+                document.getElementById('progressBar').value = 0;
             }
         });
 
@@ -234,37 +316,29 @@
             video.volume = e.target.value;
         });
 
-        video.addEventListener('ended', () => {
-            playPauseBtn.textContent = 'Play';
-            document.getElementById('progressBar').value = 0;
-        });
-
         // =====================================
         // ফুলস্ক্রিন লজিক
         // =====================================
         fullscreenBtn.addEventListener('click', () => {
             if (!document.fullscreenElement) {
-                // ফুলস্ক্রিন চালু করা
                 if (videoContainer.requestFullscreen) {
                     videoContainer.requestFullscreen();
-                } else if (videoContainer.webkitRequestFullscreen) { /* Safari */
+                } else if (videoContainer.webkitRequestFullscreen) {
                     videoContainer.webkitRequestFullscreen();
-                } else if (videoContainer.msRequestFullscreen) { /* IE11 */
+                } else if (videoContainer.msRequestFullscreen) {
                     videoContainer.msRequestFullscreen();
                 }
             } else {
-                // ফুলস্ক্রিন বন্ধ করা
                 if (document.exitFullscreen) {
                     document.exitFullscreen();
-                } else if (document.webkitExitFullscreen) { /* Safari */
+                } else if (document.webkitExitFullscreen) {
                     document.webkitExitFullscreen();
-                } else if (document.msExitFullscreen) { /* IE11 */
+                } else if (document.msExitFullscreen) {
                     document.msExitFullscreen();
                 }
             }
         });
 
-        // Esc বাটন চেপে ফুলস্ক্রিন থেকে বের হলে বাটনের টেক্সট ঠিক করা
         document.addEventListener('fullscreenchange', () => {
             if (document.fullscreenElement) {
                 fullscreenBtn.textContent = 'Exit';
@@ -272,7 +346,6 @@
                 fullscreenBtn.textContent = 'Full';
             }
         });
-
     </script>
 </body>
 </html>
