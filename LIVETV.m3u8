@@ -1,0 +1,100 @@
+#EXTM3U
+
+#EXTINF:-1 group-title="Sports" tvg-logo="https://ibb.co/cXvgFrN0",T Sports
+https://channel01-onlymex.akamaized.net/hls/live/2022749/event01/index_6.m3u8
+#EXTINF:-1 group-title="Sports" tvg-logo="https://i.ibb.co/DRkS2c3/T-Sports.png",T Sports
+https://tvex.easypecker.com/TSportsHD_sf_bdix/index.m3u8
+#EXTINF:-1 group-title="Sports" tvg-logo="https://i.imgur.com/bkx3GZx.png",LIVE TV
+https://tvex.easypecker.com/TSportsHD_nk_bdix/tracks-v1a1/mono.m3u8
+
+
+#EXTINF:-1 group-title="Sports" tvg-logo="https://i.ibb.co/DRkS2c3/T-Sports.png",T Sports-2
+http://103.209.196.22:84/feed1001/video.m3u8
+#EXTINF:-1 group-title="Sports" tvg-logo="https://i.ibb.co/DRkS2c3/T-Sports.png",T Sports-3
+http://172.102.0.81:84/feed1001/index.fmp4.m3u8
+
+#EXTINF:-1 group-title="Sports" tvg-logo="https://i.ibb.co/DRkS2c3/T-Sports.png",T Sports-4
+http://103.209.196.22:84/feed1001/index.fmp4.m3u8
+
+#EXTINF:-1 group-title="Sports" tvg-logo="https://i.ibb.co/DRkS2c3/T-Sports.png",T Sports-5
+https://tvex.easypecker.com/TSportsHD_nk_bdix/index.m3u8
+
+
+
+#EXTINF:-1 tvg-name="Bein Sports Direct" group-title="FIFA World Cup 2026",Bein Sports Direct
+https://1nyaler.streamhostingcdn.top/stream/23/index.m3u8
+
+#EXTINF:-1 tvg-logo="https://i.postimg.cc/Kc3mP7Qt/cbimage.png" group-title="FIFA",CH 3
+https://tvex.easypecker.com/A-SPORTS-HD/index.m3u8
+https://cdn-tt.pages.dev/ch1.m3u8
+
+
+
+
+
+
+#EXTM3U
+
+#EXTINF:-1 tvg-logo="https://example.com/logo1.png",চ্যানেল ১
+https://stream.example.com/ch1/playlist.m3u8
+
+#EXTINF:-1 tvg-logo="https://example.com/logo2.png",চ্যানেল ২
+https://stream.example.com/ch2/playlist.m3u8
+
+#EXTINF:-1 tvg-logo="https://example.com/logo3.png",চ্যানেল ৩
+https://stream.example.com/ch3/playlist.m3u8
+
+#EXTINF:-1 tvg-logo="https://example.com/logo4.png",চ্যানেল ৪
+https://stream.example.com/ch4/playlist.m3u8
+
+#EXTINF:-1 tvg-logo="https://example.com/logo5.png",চ্যানেল ৫
+https://stream.example.com/ch5/playlist.m3u8
+
+#EXTINF:-1 tvg-logo="https://example.com/logo6.png",চ্যানেল ৬
+https://stream.example.com/ch6/playlist.m3u8
+
+#EXTINF:-1 tvg-logo="https://example.com/logo7.png",চ্যানেল ৭
+https://stream.example.com/ch7/playlist.m3u8
+
+#EXTINF:-1 tvg-logo="https://example.com/logo8.png",চ্যানেল ৮
+https://stream.example.com/ch8/playlist.m3u8
+
+#EXTINF:-1 tvg-logo="https://example.com/logo9.png",চ্যানেল ৯
+https://stream.example.com/ch9/playlist.m3u8
+
+#EXTINF:-1 tvg-logo="https://example.com/logo10.png",চ্যানেল ১০
+https://stream.example.com/ch10/playlist.m3u8
+
+#EXTINF:-1 tvg-logo="https://example.com/logo11.png",চ্যানেল ১১
+https://stream.example.com/ch11/playlist.m3u8
+
+#EXTINF:-1 tvg-logo="https://example.com/logo12.png",চ্যানেল ১২
+https://stream.example.com/ch12/playlist.m3u8
+
+#EXTINF:-1 tvg-logo="https://example.com/logo13.png",চ্যানেল ১৩
+https://stream.example.com/ch13/playlist.m3u8
+
+#EXTINF:-1 tvg-logo="https://example.com/logo14.png",চ্যানেল ১৪
+https://stream.example.com/ch14/playlist.m3u8
+
+#EXTINF:-1 tvg-logo="https://example.com/logo15.png",চ্যানেল ১৫
+https://stream.example.com/ch15/playlist.m3u8
+
+#EXTINF:-1 tvg-logo="https://example.com/logo16.png",চ্যানেল ১৬
+https://stream.example.com/ch16/playlist.m3u8
+
+#EXTINF:-1 tvg-logo="https://example.com/logo17.png",চ্যানেল ১৭
+https://stream.example.com/ch17/playlist.m3u8
+
+#EXTINF:-1 tvg-logo="https://example.com/logo18.png",চ্যানেল ১৮
+https://stream.example.com/ch18/playlist.m3u8
+
+#EXTINF:-1 tvg-logo="https://example.com/logo19.png",চ্যানেল ১৯
+https://stream.example.com/ch19/playlist.m3u8
+
+#EXTINF:-1 tvg-logo="https://example.com/logo20.png",চ্যানেল ২০
+https://stream.example.com/ch20/playlist.m3u8
+
+
+
+
