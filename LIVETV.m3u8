@@ -36,7 +36,7 @@ https://cdn-tt.pages.dev/ch1.m3u8
 #EXTM3U
 
 #EXTINF:-1 tvg-logo="https://example.com/logo1.png",চ্যানেল ১
-https://stream.example.com/ch1/playlist.m3u8
+https://tvex.easypecker.com/A-SPORTS-HD/index.m3u8
 
 #EXTINF:-1 tvg-logo="https://example.com/logo2.png",চ্যানেল ২
 https://stream.example.com/ch2/playlist.m3u8
