@@ -11,13 +11,13 @@ https://tvex.easypecker.com/TSportsHD_nk_bdix/tracks-v1a1/mono.m3u8
 #EXTINF:-1 group-title="Sports" tvg-logo="https://i.ibb.co/DRkS2c3/T-Sports.png",T Sports-2
 http://103.209.196.22:84/feed1001/video.m3u8
 #EXTINF:-1 group-title="Sports" tvg-logo="https://i.ibb.co/DRkS2c3/T-Sports.png",T Sports-3
-http://172.102.0.81:84/feed1001/index.fmp4.m3u8
+https://tvex.easypecker.com/SONY-SPORTS.5HD/index.m3u8
 
 #EXTINF:-1 group-title="Sports" tvg-logo="https://i.ibb.co/DRkS2c3/T-Sports.png",T Sports-4
 http://103.209.196.22:84/feed1001/index.fmp4.m3u8
 
 #EXTINF:-1 group-title="Sports" tvg-logo="https://i.ibb.co/DRkS2c3/T-Sports.png",T Sports-5
-https://tvex.easypecker.com/TSportsHD_nk_bdix/index.m3u8
+https://tvex.easypecker.com/SONY-SPORTS.5HD/index.m3u8
 
 
 
@@ -42,7 +42,7 @@ https://tvex.easypecker.com/A-SPORTS-HD/index.m3u8
 https://stream.example.com/ch2/playlist.m3u8
 
 #EXTINF:-1 tvg-logo="https://example.com/logo3.png",চ্যানেল ৩
-https://stream.example.com/ch3/playlist.m3u8
+https://tvex.easypecker.com/SONY-SPORTS.5HD/index.m3u8
 
 #EXTINF:-1 tvg-logo="https://example.com/logo4.png",চ্যানেল ৪
 https://stream.example.com/ch4/playlist.m3u8
